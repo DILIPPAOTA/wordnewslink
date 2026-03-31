@@ -1,0 +1,186 @@
+
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10-इन-1 फन और मैजिक हब</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: white; margin: 0; padding: 10px; }
+        .header { text-align: center; padding: 20px; background: linear-gradient(135deg, #1e293b, #3b82f6); border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
+        .card { background: #1e293b; padding: 15px; border-radius: 12px; border: 1px solid #334155; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h3 { margin-top: 0; color: #60a5fa; font-size: 1.1rem; border-bottom: 1px solid #334155; padding-bottom: 8px; margin-bottom: 15px; }
+        input { width: 80%; padding: 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; margin-bottom: 10px; text-align: center; font-size: 16px; }
+        .btn { background: #3b82f6; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; font-size: 14px; }
+        .btn:hover { background: #2563eb; transform: translateY(-2px); }
+        .res { margin-top: 10px; font-size: 14px; font-weight: bold; color: #4ade80; min-height: 20px; }
+        .earth-btn { background: #4285f4 !important; border: none; cursor: pointer; display: block; width: 100%; color: white; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        .earth-btn:hover { background: #3367d6 !important; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🚀 मल्टी-टास्क फन ज़ोन</h1>
+    <p>मनोरंजन और ज्ञान - सब कुछ एक ही जगह!</p>
+</div>
+
+<div class="grid">
+    <!-- 1. Google Earth (FULLY FIXED) -->
+    <div class="card">
+        <h3>🌍 1. दुनिया की सैर (3D)</h3>
+        <p style="font-size: 12px; color: #94a3b8; margin-bottom: 10px;">नोट: यह 3D मैप नए टैब में खुलेगा।</p>
+        <button onclick="window.open('https://earth.google.com/web/@20.71690195,82.4430297,3009.59886023a,12105155.80697894d,35y,356.12481581h,0t,0r/data=CgRCAggBQgIIAEoNCP___________wEQAA', '_blank')" class="earth-btn">
+             🚀 Google Earth खोलें
+        </button>
+    </div>
+
+    <!-- 2. Fill in the Blank -->
+    <div class="card">
+        <h3>📝 2. खाली जगह भरें</h3>
+        <p>M _ N G O (एक फल का नाम)</p>
+        <input type="text" id="fillInput" placeholder="बीच का अक्षर लिखें">
+        <button class="btn" onclick="checkFill()">चेक करें</button>
+        <div id="fillRes" class="res"></div>
+    </div>
+
+    <!-- 3. Hindi to English -->
+    <div class="card">
+        <h3>🇮🇳 3. हिंदी से English</h3>
+        <p>"बिल्ली" को इंग्लिश में क्या कहते हैं?</p>
+        <input type="text" id="h2eInput" placeholder="English शब्द यहाँ लिखें">
+        <button class="btn" onclick="checkH2E()">चेक करें</button>
+        <div id="h2eRes" class="res"></div>
+    </div>
+
+    <!-- 4. English to Hindi -->
+    <div class="card">
+        <h3>🇬🇧 4. English से हिंदी</h3>
+        <p>"Apple" का हिंदी मतलब क्या है?</p>
+        <input type="text" id="e2hInput" placeholder="हिंदी शब्द यहाँ लिखें">
+        <button class="btn" onclick="checkE2H()">चेक करें</button>
+        <div id="e2hRes" class="res"></div>
+    </div>
+
+    <!-- 5. Country & Capital -->
+    <div class="card">
+        <h3>🏛️ 5. देश और राजधानी</h3>
+        <p>भारत (India) की राजधानी क्या है?</p>
+        <input type="text" id="capInput" placeholder="राजधानी का नाम">
+        <button class="btn" onclick="checkCap()">चेक करें</button>
+        <div id="capRes" class="res"></div>
+    </div>
+
+    <!-- 6. Simple Calculator -->
+    <div class="card">
+        <h3>🔢 6. मिनी कैलकुलेटर</h3>
+        <div style="display: flex; gap: 5px; justify-content: center;">
+            <input type="number" id="n1" style="width:40%" placeholder="No 1">
+            <input type="number" id="n2" style="width:40%" placeholder="No 2">
+        </div>
+        <div style="display: flex; gap: 5px; margin-top: 5px;">
+            <button class="btn" onclick="calc('+')">+</button>
+            <button class="btn" onclick="calc('-')">-</button>
+            <button class="btn" onclick="calc('*')">x</button>
+        </div>
+        <div id="calcRes" class="res"></div>
+    </div>
+
+    <!-- 7. Mind Reader Magic -->
+    <div class="card">
+        <h3>🔮 7. माइंड रीडर जादू</h3>
+        <p id="magicStep" style="font-size: 18px; color: #fbbf24;">1. मन में कोई भी एक नंबर सोचें।</p>
+        <button class="btn" style="background:#8b5cf6;" onclick="nextMagic()">अगला स्टेप दबाएँ</button>
+        <div id="magicRes" class="res"></div>
+    </div>
+
+    <!-- 8. Rock Paper Scissors -->
+    <div class="card">
+        <h3>✊ 8. पत्थर-कागज-कैंची</h3>
+        <div style="display: flex; gap: 5px;">
+            <button class="btn" onclick="playRPS('Rock')">✊ Rock</button>
+            <button class="btn" onclick="playRPS('Paper')">✋ Paper</button>
+            <button class="btn" onclick="playRPS('Scissors')">✌️ Scissors</button>
+        </div>
+        <div id="rpsRes" class="res"></div>
+    </div>
+
+    <!-- 9. CPU vs User (1-5) -->
+    <div class="card">
+        <h3>🤖 9. CPU चैलेंज (1-5)</h3>
+        <input type="number" id="cpuIn" placeholder="1 से 5 चुनें">
+        <button class="btn" style="background:#10b981;" onclick="playCPU()">मैच करें</button>
+        <div id="cpuRes" class="res"></div>
+    </div>
+
+    <!-- 10. Daily Quote -->
+    <div class="card">
+        <h3>💡 10. आज का अनमोल विचार</h3>
+        <p id="quote" style="font-style: italic; color: #94a3b8;">"कोशिश करने वालों की कभी हार नहीं होती।"</p>
+        <button class="btn" style="background:#f59e0b;" onclick="newQuote()">नया विचार देखें</button>
+    </div>
+</div>
+
+<script>
+    function checkFill() {
+        let v = document.getElementById('fillInput').value.toUpperCase();
+        document.getElementById('fillRes').innerText = (v=='A') ? "✅ सही जवाब: MANGO" : "❌ गलत! फिर कोशिश करें।";
+    }
+    function checkH2E() {
+        let v = document.getElementById('h2eInput').value.toLowerCase();
+        document.getElementById('h2eRes').innerText = (v=='cat') ? "✅ बिल्कुल सही: CAT" : "❌ गलत जवाब।";
+    }
+    function checkE2H() {
+        let v = document.getElementById('e2hInput').value;
+        document.getElementById('e2hRes').innerText = (v=='सेब' || v=='seb') ? "✅ सही: सेब" : "❌ गलत जवाब।";
+    }
+    function checkCap() {
+        let v = document.getElementById('capInput').value;
+        document.getElementById('capRes').innerText = (v=='नई दिल्ली' || v=='delhi' || v=='new delhi' || v=='New Delhi') ? "✅ सही जवाब!" : "❌ गलत, सही उत्तर 'नई दिल्ली' है।";
+    }
+    function calc(op) {
+        let a = Number(document.getElementById('n1').value);
+        let b = Number(document.getElementById('n2').value);
+        let r = op=='+'?a+b:op=='-'?a-b:a*b;
+        document.getElementById('calcRes').innerText = "उत्तर है: " + r;
+    }
+    let mStep = 0;
+    function nextMagic() {
+        const steps = [
+            "2. अब उसे 2 से गुणा (Double) करें।",
+            "3. उसमें 10 जोड़ें।",
+            "4. अब पूरे को 2 से भाग (Divide) दें।",
+            "5. अब इसमें से वो नंबर घटा दें जो शुरू में सोचा था।",
+            "🔮 जादू! आपके पास अब '5' बचा है। है ना?"
+        ];
+        if(mStep < steps.length) {
+            document.getElementById('magicStep').innerText = steps[mStep];
+            mStep++;
+        } else {
+            mStep = 0;
+            document.getElementById('magicStep').innerText = "1. मन में कोई भी एक नंबर सोचें।";
+        }
+    }
+    function playRPS(u) {
+        const choices = ['Rock', 'Paper', 'Scissors'];
+        const c = choices[Math.floor(Math.random()*3)];
+        let res = (u==c)?"Draw!":((u=='Rock'&&c=='Scissors')||(u=='Paper'&&c=='Rock')||(u=='Scissors'&&c=='Paper'))?"You Win!":"CPU Wins!";
+        document.getElementById('rpsRes').innerText = `CPU ने ${c} चुना. ${res}`;
+    }
+    function playCPU() {
+        let u = document.getElementById('cpuIn').value;
+        let c = Math.floor(Math.random()*5)+1;
+        document.getElementById('cpuRes').innerText = (u==c)?`✅ मैच हुआ! CPU ने भी ${c} चुना।`:`❌ मैच नहीं हुआ। CPU ने ${c} चुना था।`;
+    }
+    function newQuote() {
+        const q = ["सफलता मेहनत मांगती है।", "आज का दिन आपका है।", "हमेशा मुस्कुराते रहें।", "बड़ा सोचें, बड़ा करें।"];
+        document.getElementById('quote').innerText = q[Math.floor(Math.random()*q.length)];
+    }
+</script>
+
+<footer style="text-align:center; padding:30px; color:#64748b; font-size:12px;">
+    © 2026 आपका फन ज़ोन | फेसबुक पर शेयर करें!
+</footer>
+
+</body>
+</html>
