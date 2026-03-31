@@ -3,184 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>10-इन-1 फन और मैजिक हब</title>
+    <title>Ultra Kids Arcade V2</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: white; margin: 0; padding: 10px; }
-        .header { text-align: center; padding: 20px; background: linear-gradient(135deg, #1e293b, #3b82f6); border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
-        .card { background: #1e293b; padding: 15px; border-radius: 12px; border: 1px solid #334155; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h3 { margin-top: 0; color: #60a5fa; font-size: 1.1rem; border-bottom: 1px solid #334155; padding-bottom: 8px; margin-bottom: 15px; }
-        input { width: 80%; padding: 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; margin-bottom: 10px; text-align: center; font-size: 16px; }
-        .btn { background: #3b82f6; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; font-size: 14px; }
-        .btn:hover { background: #2563eb; transform: translateY(-2px); }
-        .res { margin-top: 10px; font-size: 14px; font-weight: bold; color: #4ade80; min-height: 20px; }
-        .earth-btn { background: #4285f4 !important; border: none; cursor: pointer; display: block; width: 100%; color: white; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 16px; transition: 0.3s; }
-        .earth-btn:hover { background: #3367d6 !important; }
+        body { font-family: 'Comic Sans MS', cursive, sans-serif; background: #8ecae6; min-height: 100vh; margin: 0; padding: 10px; overflow-x: hidden; }
+        .container { max-width: 550px; margin: 15px auto; background: white; padding: 20px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.3); text-align: center; border: 5px solid #023047; position: relative; z-index: 10; }
+        h1 { color: #023047; font-size: 1.8rem; margin: 0 0 10px 0; }
+        .score-board { font-size: 1.4rem; background: #fb8500; color: white; padding: 8px 25px; border-radius: 50px; display: inline-block; margin-bottom: 15px; border: 3px solid #023047; }
+        .menu { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-main { padding: 15px; font-size: 14px; border: none; border-radius: 15px; cursor: pointer; color: white; font-weight: bold; box-shadow: 0 4px #555; }
+        #game-area { display: none; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .opt-btn { padding: 15px; font-size: 1.1rem; border: 3px solid #023047; border-radius: 15px; cursor: pointer; background: #fff; font-weight: bold; transition: 0.2s; }
+        #msg { font-size: 1.4rem; margin-top: 15px; font-weight: bold; min-height: 35px; }
+        .light-burst { position: absolute; pointer-events: none; border-radius: 50%; animation: burst 0.6s ease-out forwards; z-index: 1; }
+        @keyframes burst { 0% { width: 0; height: 0; opacity: 1; box-shadow: 0 0 20px white; } 100% { width: 350px; height: 350px; opacity: 0; box-shadow: 0 0 100px currentColor; } }
+        .earth-link { display: block; margin-top: 15px; background: #219ebc; color: white; padding: 12px; border-radius: 15px; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>🚀 मल्टी-टास्क फन ज़ोन</h1>
-    <p>मनोरंजन और ज्ञान - सब कुछ एक ही जगह!</p>
-</div>
+<div class="container" id="box">
+    <h1>🚀 Kids Fun Arcade 🚀</h1>
+    <div class="score-board">Score: <span id="score">0</span></div>
 
-<div class="grid">
-    <!-- 1. Google Earth (FULLY FIXED) -->
-    <div class="card">
-        <h3>🌍 1. दुनिया की सैर (3D)</h3>
-        <p style="font-size: 12px; color: #94a3b8; margin-bottom: 10px;">नोट: यह 3D मैप नए टैब में खुलेगा।</p>
-        <button onclick="window.open('https://earth.google.com/web/@20.71690195,82.4430297,3009.59886023a,12105155.80697894d,35y,356.12481581h,0t,0r/data=CgRCAggBQgIIAEoNCP___________wEQAA', '_blank')" class="earth-btn">
-             🚀 Google Earth खोलें
-        </button>
+    <div id="main-menu" class="menu">
+        <button class="btn-main" style="background:#ff595e" onclick="start('india')">1. India (All States)</button>
+        <button class="btn-main" style="background:#3a86ff" onclick="start('math')">2. Fun Math</button>
+        <button class="btn-main" style="background:#8338ec" onclick="start('animal')">3. Animal sounds</button>
+        <button class="btn-main" style="background:#38b000" onclick="start('table')">4. Tables (1-25)</button>
+        <button class="btn-main" style="background:#fb5607" onclick="start('rps')">5. Rock-Paper-Scissors</button>
+        <button class="btn-main" style="background:#ff006e" onclick="start('guess')">6. Big/Small</button>
+        <button class="btn-main" style="background:#00b4d8" onclick="start('color')">7. Color Quiz</button>
+        <button class="btn-main" style="background:#ef476f" onclick="start('fruit')">8. 50+ Fruits</button>
+        <button class="btn-main" style="background:#06d6a0; color:#333" onclick="start('spell')">9. Spelling Bee</button>
+        <button class="btn-main" style="background:#118ab2" onclick="start('shapes')">10. All Shapes</button>
     </div>
 
-    <!-- 2. Fill in the Blank -->
-    <div class="card">
-        <h3>📝 2. खाली जगह भरें</h3>
-        <p>M _ N G O (एक फल का नाम)</p>
-        <input type="text" id="fillInput" placeholder="बीच का अक्षर लिखें">
-        <button class="btn" onclick="checkFill()">चेक करें</button>
-        <div id="fillRes" class="res"></div>
+    <div id="game-area">
+        <h2 id="ques" style="color:#d00000; min-height:50px;"></h2>
+        <div id="options" class="options-grid"></div>
+        <div id="msg"></div>
+        <button onclick="location.reload()" style="background:#666; color:white; border:none; padding:10px 20px; border-radius:10px; margin-top:20px; cursor:pointer;">Main Menu</button>
     </div>
-
-    <!-- 3. Hindi to English -->
-    <div class="card">
-        <h3>🇮🇳 3. हिंदी से English</h3>
-        <p>"बिल्ली" को इंग्लिश में क्या कहते हैं?</p>
-        <input type="text" id="h2eInput" placeholder="English शब्द यहाँ लिखें">
-        <button class="btn" onclick="checkH2E()">चेक करें</button>
-        <div id="h2eRes" class="res"></div>
-    </div>
-
-    <!-- 4. English to Hindi -->
-    <div class="card">
-        <h3>🇬🇧 4. English से हिंदी</h3>
-        <p>"Apple" का हिंदी मतलब क्या है?</p>
-        <input type="text" id="e2hInput" placeholder="हिंदी शब्द यहाँ लिखें">
-        <button class="btn" onclick="checkE2H()">चेक करें</button>
-        <div id="e2hRes" class="res"></div>
-    </div>
-
-    <!-- 5. Country & Capital -->
-    <div class="card">
-        <h3>🏛️ 5. देश और राजधानी</h3>
-        <p>भारत (India) की राजधानी क्या है?</p>
-        <input type="text" id="capInput" placeholder="राजधानी का नाम">
-        <button class="btn" onclick="checkCap()">चेक करें</button>
-        <div id="capRes" class="res"></div>
-    </div>
-
-    <!-- 6. Simple Calculator -->
-    <div class="card">
-        <h3>🔢 6. मिनी कैलकुलेटर</h3>
-        <div style="display: flex; gap: 5px; justify-content: center;">
-            <input type="number" id="n1" style="width:40%" placeholder="No 1">
-            <input type="number" id="n2" style="width:40%" placeholder="No 2">
-        </div>
-        <div style="display: flex; gap: 5px; margin-top: 5px;">
-            <button class="btn" onclick="calc('+')">+</button>
-            <button class="btn" onclick="calc('-')">-</button>
-            <button class="btn" onclick="calc('*')">x</button>
-        </div>
-        <div id="calcRes" class="res"></div>
-    </div>
-
-    <!-- 7. Mind Reader Magic -->
-    <div class="card">
-        <h3>🔮 7. माइंड रीडर जादू</h3>
-        <p id="magicStep" style="font-size: 18px; color: #fbbf24;">1. मन में कोई भी एक नंबर सोचें।</p>
-        <button class="btn" style="background:#8b5cf6;" onclick="nextMagic()">अगला स्टेप दबाएँ</button>
-        <div id="magicRes" class="res"></div>
-    </div>
-
-    <!-- 8. Rock Paper Scissors -->
-    <div class="card">
-        <h3>✊ 8. पत्थर-कागज-कैंची</h3>
-        <div style="display: flex; gap: 5px;">
-            <button class="btn" onclick="playRPS('Rock')">✊ Rock</button>
-            <button class="btn" onclick="playRPS('Paper')">✋ Paper</button>
-            <button class="btn" onclick="playRPS('Scissors')">✌️ Scissors</button>
-        </div>
-        <div id="rpsRes" class="res"></div>
-    </div>
-
-    <!-- 9. CPU vs User (1-5) -->
-    <div class="card">
-        <h3>🤖 9. CPU चैलेंज (1-5)</h3>
-        <input type="number" id="cpuIn" placeholder="1 से 5 चुनें">
-        <button class="btn" style="background:#10b981;" onclick="playCPU()">मैच करें</button>
-        <div id="cpuRes" class="res"></div>
-    </div>
-
-    <!-- 10. Daily Quote -->
-    <div class="card">
-        <h3>💡 10. आज का अनमोल विचार</h3>
-        <p id="quote" style="font-style: italic; color: #94a3b8;">"कोशिश करने वालों की कभी हार नहीं होती।"</p>
-        <button class="btn" style="background:#f59e0b;" onclick="newQuote()">नया विचार देखें</button>
-    </div>
+    
+    <a href="https://earth.google.com/web/@22.58335694,78.42869928,-208.84533213a,12937880.18143416d,35y,0h,0t,0r/data=CgRCAggBQgIIAEoNCP___________wEQAA" target="_blank" class="earth-link">🌍 Explore Google Earth</a>
 </div>
 
 <script>
-    function checkFill() {
-        let v = document.getElementById('fillInput').value.toUpperCase();
-        document.getElementById('fillRes').innerText = (v=='A') ? "✅ सही जवाब: MANGO" : "❌ गलत! फिर कोशिश करें।";
+    let mode = "", correct = "", score = 0;
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    const DB = {
+        india: {"Andhra Pradesh":"Amaravati", "Arunachal Pradesh":"Itanagar", "Assam":"Dispur", "Bihar":"Patna", "Chhattisgarh":"Raipur", "Goa":"Panaji", "Gujarat":"Gandhinagar", "Haryana":"Chandigarh", "Himachal Pradesh":"Shimla", "Jharkhand":"Ranchi", "Karnataka":"Bengaluru", "Kerala":"Thiruvananthapuram", "Madhya Pradesh":"Bhopal", "Maharashtra":"Mumbai", "Manipur":"Imphal", "Meghalaya":"Shillong", "Mizoram":"Aizawl", "Nagaland":"Kohima", "Odisha":"Bhubaneswar", "Punjab":"Chandigarh", "Rajasthan":"Jaipur", "Sikkim":"Gangtok", "Tamil Nadu":"Chennai", "Telangana":"Hyderabad", "Tripura":"Agartala", "Uttar Pradesh":"Lucknow", "Uttarakhand":"Dehradun", "West Bengal":"Kolkata"},
+        animals: {"Lion":"Roar", "Dog":"Woof", "Cat":"Meow", "Cow":"Moo", "Duck":"Quack", "Sheep":"Baa", "Elephant":"Trumpet", "Horse":"Neigh", "Snake":"Hiss", "Monkey":"Chatter", "Bee":"Buzz", "Frog":"Croak"},
+        spellings: ["APPLE", "MANGO", "BANANA", "ORANGE", "GRAPES", "FLOWER", "SCHOOL", "INDIA", "TIGER", "ZEBRA", "COMPUTER", "WATER", "EARTH", "BOTTLE", "FRIEND", "BIRD", "FISH", "CHAIR", "TABLE", "PENCIL", "MOBILE", "GARDEN", "FOREST", "RIVER", "MOUNTAIN", "HOUSE", "PLANE", "ROCKET", "STAR", "MOON", "RAINBOW", "BUTTERFLY", "UMBRELLA", "KITCHEN", "VILLAGE", "DOCTOR", "POLICE", "FATHER", "MOTHER", "SISTER", "BROTHER", "PUPPY", "KITTEN"],
+        shapes: {"Ball":"Circle", "Box":"Square", "Door":"Rectangle", "Samosa":"Triangle", "Star Fish":"Star", "Egg":"Oval", "Kite":"Diamond", "Wheel":"Circle", "Book":"Rectangle", "Laptop":"Rectangle", "Pizza Slice":"Triangle", "Clock":"Circle"},
+        colors: {"Sky":"Blue", "Milk":"White", "Grass":"Green", "Crow":"Black", "Sun":"Yellow", "Carrot":"Orange", "Teeth":"White", "Hair":"Black", "Leaf":"Green", "Blood":"Red"},
+        fruits: {"Mango":"Yellow", "Apple":"Red", "Banana":"Yellow", "Orange":"Orange", "Grapes":"Green", "Strawberry":"Red", "Watermelon":"Green", "Blueberry":"Blue", "Kiwi":"Brown", "Cherry":"Red", "Pineapple":"Yellow", "Coconut":"Brown", "Pomegranate":"Red", "Papaya":"Yellow"}
+    };
+
+    function playSound(type) {
+        const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.frequency.setValueAtTime(type=='win'?600:150, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime); osc.start(); osc.stop(audioCtx.currentTime + 0.2);
     }
-    function checkH2E() {
-        let v = document.getElementById('h2eInput').value.toLowerCase();
-        document.getElementById('h2eRes').innerText = (v=='cat') ? "✅ बिल्कुल सही: CAT" : "❌ गलत जवाब।";
+
+    function showLight() {
+        const burst = document.createElement('div'); burst.className = 'light-burst';
+        burst.style.left = '50%'; burst.style.top = '50%'; burst.style.color = '#ffb703';
+        burst.style.transform = 'translate(-50%, -50%)';
+        document.body.appendChild(burst); setTimeout(() => burst.remove(), 600);
     }
-    function checkE2H() {
-        let v = document.getElementById('e2hInput').value;
-        document.getElementById('e2hRes').innerText = (v=='सेब' || v=='seb') ? "✅ सही: सेब" : "❌ गलत जवाब।";
+
+    function start(m) {
+        mode = m; document.getElementById('main-menu').style.display='none';
+        document.getElementById('game-area').style.display='block'; next();
     }
-    function checkCap() {
-        let v = document.getElementById('capInput').value;
-        document.getElementById('capRes').innerText = (v=='नई दिल्ली' || v=='delhi' || v=='new delhi' || v=='New Delhi') ? "✅ सही जवाब!" : "❌ गलत, सही उत्तर 'नई दिल्ली' है।";
+
+    function next() {
+        let opts = []; let qText = "";
+        const optDiv = document.getElementById('options'); optDiv.innerHTML = "";
+        document.getElementById('msg').innerText = "";
+
+        if(mode == 'fruit') {
+            let k = Object.keys(DB.fruits); let pick = k[Math.floor(Math.random()*k.length)];
+            qText = "Color of " + pick + "?"; correct = DB.fruits[pick];
+            opts = ["Red", "Yellow", "Green", "Orange", "Blue", "Brown", "Purple"].filter(x=>x!=correct).sort(()=>0.5-Math.random()).slice(0,3);
+            opts.push(correct);
+        } else if(mode == 'india') {
+            let k = Object.keys(DB.india); let pick = k[Math.floor(Math.random()*k.length)];
+            qText = "Capital of " + pick + "?"; correct = DB.india[pick];
+            opts = [correct, "Delhi", "Mumbai", "Kolkata", "Patna", "Chennai", "Goa"].filter(x=>x!=correct).sort(()=>0.5-Math.random()).slice(0,3);
+            opts.push(correct);
+        } else if(mode == 'shapes') {
+            let k = Object.keys(DB.shapes); let pick = k[Math.floor(Math.random()*k.length)];
+            qText = "Shape of " + pick + "?"; correct = DB.shapes[pick];
+            opts = ["Circle", "Square", "Triangle", "Rectangle", "Star", "Diamond", "Oval"].filter(x=>x!=correct).sort(()=>0.5-Math.random()).slice(0,3);
+            opts.push(correct);
+        } else if(mode == 'spell') {
+            let word = DB.spellings[Math.floor(Math.random()*DB.spellings.length)];
+            let idx = Math.floor(Math.random()*word.length); correct = word[idx];
+            qText = word.substring(0, idx) + "_" + word.substring(idx+1);
+            opts = [correct, "A", "E", "I", "O", "U", "B", "D", "K", "L", "S"].filter(l => l != correct).sort(()=>0.5-Math.random()).slice(0, 3);
+            opts.push(correct);
+        } else if(mode == 'math') {
+            let a = Math.floor(Math.random()*50), b = Math.floor(Math.random()*50);
+            qText = a + " + " + b + " = ?"; correct = (a+b).toString();
+            opts = [correct, (a+b+5).toString(), (a+b-2).toString(), (a+b+10).toString()];
+        } else if(mode == 'table') {
+            let t = Math.floor(Math.random()*25)+1, n = Math.floor(Math.random()*10)+1;
+            qText = t + " x " + n + " = ?"; correct = (t*n).toString();
+            opts = [correct, (t*n+t).toString(), (t*n-t).toString(), (t*n+1).toString()];
+        } else if(mode == 'animal') {
+            let k = Object.keys(DB.animals); let pick = k[Math.floor(Math.random()*k.length)];
+            qText = pick + " sound?"; correct = DB.animals[pick];
+            opts = ["Roar", "Meow", "Woof", "Moo", "Hiss", "Neigh", "Trumpet"].filter(x=>x!=correct).sort(()=>0.5-Math.random()).slice(0,3);
+            opts.push(correct);
+        } else if(mode == 'color') {
+            let k = Object.keys(DB.colors); let pick = k[Math.floor(Math.random()*k.length)];
+            qText = "Color of " + pick + "?"; correct = DB.colors[pick];
+            opts = ["Red", "Blue", "Green", "Yellow", "Black", "White", "Orange"].filter(x=>x!=correct).sort(()=>0.5-Math.random()).slice(0,3);
+            opts.push(correct);
+        } else if(mode == 'guess') {
+            let n1 = Math.floor(Math.random()*200), n2 = Math.floor(Math.random()*200);
+            qText = "Bigger: " + n1 + " or " + n2 + "?"; correct = (n1 > n2 ? n1 : n2).toString(); opts = [n1.toString(), n2.toString()];
+        } else if(mode == 'rps') {
+            qText = "Rock, Paper or Scissors?"; correct = "rps"; opts = ["Rock", "Paper", "Scissors"];
+        }
+
+        document.getElementById('ques').innerText = qText;
+        opts.sort(() => Math.random() - 0.5).forEach(o => {
+            let b = document.createElement('button'); b.className = "opt-btn";
+            b.innerText = o; b.onclick = () => check(o); optDiv.appendChild(b);
+        });
     }
-    function calc(op) {
-        let a = Number(document.getElementById('n1').value);
-        let b = Number(document.getElementById('n2').value);
-        let r = op=='+'?a+b:op=='-'?a-b:a*b;
-        document.getElementById('calcRes').innerText = "उत्तर है: " + r;
-    }
-    let mStep = 0;
-    function nextMagic() {
-        const steps = [
-            "2. अब उसे 2 से गुणा (Double) करें।",
-            "3. उसमें 10 जोड़ें।",
-            "4. अब पूरे को 2 से भाग (Divide) दें।",
-            "5. अब इसमें से वो नंबर घटा दें जो शुरू में सोचा था।",
-            "🔮 जादू! आपके पास अब '5' बचा है। है ना?"
-        ];
-        if(mStep < steps.length) {
-            document.getElementById('magicStep').innerText = steps[mStep];
-            mStep++;
+
+    function check(val) {
+        if(mode == 'rps') {
+            let cpu = ["Rock", "Paper", "Scissors"][Math.floor(Math.random()*3)];
+            if(val == cpu) { document.getElementById('msg').innerText = "Tie! CPU chose " + cpu; }
+            else if((val=='Rock'&&cpu=='Scissors')||(val=='Paper'&&cpu=='Rock')||(val=='Scissors'&&cpu=='Paper')) {
+                document.getElementById('msg').innerHTML = "<span style='color:green'>WON! 🎉 CPU: "+cpu+"</span>"; showLight(); playSound('win'); score+=10;
+            } else { document.getElementById('msg').innerHTML = "<span style='color:red'>Lost! 😢 CPU: "+cpu+"</span>"; playSound('lose'); }
+            setTimeout(next, 1500);
+        } else if(val == correct) {
+            document.getElementById('msg').innerHTML = "<span style='color:green'>Correct! ✅</span>";
+            showLight(); playSound('win'); score += 10; document.getElementById('score').innerText = score;
+            setTimeout(next, 1000);
         } else {
-            mStep = 0;
-            document.getElementById('magicStep').innerText = "1. मन में कोई भी एक नंबर सोचें।";
+            document.getElementById('msg').innerHTML = "<span style='color:red'>Wrong! ❌ Answer: "+correct+"</span>"; playSound('lose'); setTimeout(next, 1500);
         }
     }
-    function playRPS(u) {
-        const choices = ['Rock', 'Paper', 'Scissors'];
-        const c = choices[Math.floor(Math.random()*3)];
-        let res = (u==c)?"Draw!":((u=='Rock'&&c=='Scissors')||(u=='Paper'&&c=='Rock')||(u=='Scissors'&&c=='Paper'))?"You Win!":"CPU Wins!";
-        document.getElementById('rpsRes').innerText = `CPU ने ${c} चुना. ${res}`;
-    }
-    function playCPU() {
-        let u = document.getElementById('cpuIn').value;
-        let c = Math.floor(Math.random()*5)+1;
-        document.getElementById('cpuRes').innerText = (u==c)?`✅ मैच हुआ! CPU ने भी ${c} चुना।`:`❌ मैच नहीं हुआ। CPU ने ${c} चुना था।`;
-    }
-    function newQuote() {
-        const q = ["सफलता मेहनत मांगती है।", "आज का दिन आपका है।", "हमेशा मुस्कुराते रहें।", "बड़ा सोचें, बड़ा करें।"];
-        document.getElementById('quote').innerText = q[Math.floor(Math.random()*q.length)];
-    }
 </script>
-
-<footer style="text-align:center; padding:30px; color:#64748b; font-size:12px;">
-    © 2026 आपका फन ज़ोन | फेसबुक पर शेयर करें!
-</footer>
-
 </body>
 </html>
