@@ -2,260 +2,292 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sudoku Pro - Target Time Mode</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sudoku Pro - Sound & Mobile Fixed</title>
     <style>
-        :root { --primary: #4caf50; --error: #f44336; --accent: #2196F3; --bg: #f0f2f5; }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg); display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        :root { --primary: #4caf50; --error: #f44336; --accent: #2196F3; --bg: #f0f2f5; --dark-blue: #34495e; }
+        * { box-sizing: border-box; touch-action: manipulation; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); display: flex; flex-direction: column; align-items: center; padding: 10px; margin: 0; overflow-x: hidden; }
         
-        .header { text-align: center; margin-bottom: 15px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); width: 380px; }
-        .stats-row { display: flex; justify-content: space-around; font-weight: bold; margin-bottom: 5px; }
-        
-        /* TARGET TIME DISPLAY */
-        .target-box { background: #fff3cd; color: #856404; padding: 5px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; margin-bottom: 10px; border: 1px solid #ffeeba; }
+        /* Original Header UI */
+        .header { text-align: center; margin-bottom: 10px; background: white; padding: 12px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); width: 100%; max-width: 380px; }
+        .stats-row { display: flex; justify-content: space-around; font-weight: bold; color: #333; font-size: 14px; }
+        .target-box { background: #fff3cd; color: #856404; padding: 5px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-bottom: 10px; border: 1px solid #ffeeba; }
 
-        .grid-container { background: #000; padding: 3px; border: 4px solid #000; display: inline-block; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; margin: 10px 0; }
-        .grid { display: grid; grid-template-columns: repeat(9, 48px); grid-template-rows: repeat(9, 48px); background: #000; gap: 1px; }
-        .cell { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: #fff; box-sizing: border-box; }
+        /* Grid Container - Mobile Responsive */
+        .grid-container { background: #000; padding: 3px; border: 4px solid #000; display: inline-block; position: relative; margin: 5px 0; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(9, min(10.5vw, 42px)); 
+            grid-template-rows: repeat(9, min(10.5vw, 42px)); 
+            background: #000; gap: 1px; 
+        }
 
+        .cell { width: 100%; height: 100%; background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; font-weight: bold; }
+        .cell.fixed { background: #f1f4f6 !important; color: #333; }
+        .cell.selected { background: #e3f2fd !important; outline: 2px solid var(--accent); z-index: 5; }
+        .cell.user-correct { color: #27ae60 !important; }
+        .cell.user-wrong { color: #e74c3c !important; background: #fdf2f2; }
+
+        /* Thick Borders for 3x3 */
         .cell:nth-child(3n) { border-right: 3px solid #000; }
         .cell:nth-child(9n) { border-right: none; }
-        .row-thick-border { border-bottom: 3px solid #000 !important; }
+        .grid > div:nth-child(n+19):nth-child(-n+27), .grid > div:nth-child(n+46):nth-child(-n+54) { border-bottom: 3px solid #000; }
 
-        .cell input { width: 100%; height: 100%; border: none; text-align: center; font-size: 22px; outline: none; background: transparent; }
-        .fixed { background: #f1f4f6 !important; font-weight: bold; color: #333; }
-        .user-correct { color: #27ae60 !important; font-weight: bold; }
-        .user-wrong { color: #e74c3c !important; font-weight: bold; background: #fdf2f2; }
+        /* Mobile Number Picker (The List) */
+        #number-picker { display: none; position: absolute; background: white; border: 2px solid #000; padding: 10px; border-radius: 12px; z-index: 100; grid-template-columns: repeat(3, 1fr); gap: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .num-btn { width: 50px; height: 50px; border: none; background: var(--accent); color: white; border-radius: 8px; font-size: 22px; font-weight: bold; }
+        .num-btn.clear { background: var(--error); grid-column: span 3; height: 40px; font-size: 14px; }
 
-        .controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
-        button { padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; transition: 0.2s; }
+        /* Buttons Styling */
+        .controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 400px; margin-top: 10px; }
+        button { padding: 10px 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; font-size: 13px; transition: 0.2s; }
+        button:active { transform: scale(0.95); }
+        select { padding: 10px; border-radius: 8px; border: 2px solid var(--dark-blue); font-weight: bold; background: white; }
         .btn-start { background: var(--primary); }
-        .btn-restart { background: #9b59b6; }
-        .btn-pause { background: #7f8c8d; }
-        .btn-action { background: #34495e; }
+        .btn-action { background: var(--dark-blue); }
         .btn-hint { background: #f39c12; }
         .btn-giveup { background: var(--error); }
-        
-        .paused-grid { filter: blur(12px); opacity: 0.3; pointer-events: none; }
-        #pause-msg { position: absolute; top: 45%; left: 0; width: 100%; text-align: center; font-weight: bold; font-size: 24px; color: #000; display: none; z-index: 10; }
-        select { padding: 10px; border-radius: 8px; border: 2px solid #34495e; font-weight: bold; background: white; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <div class="stats-row">
-            <span id="level-display">SUDOKU</span>
+            <span id="level-label">SUDOKU</span>
             <span id="timer-display">⏱ 00:00</span>
             <span style="color: var(--accent);">Moves: <span id="move-count">0</span></span>
         </div>
     </div>
 
-    <!-- TARGET INFO DISPLAY -->
-    <div class="target-box" id="target-info">Select Level to see Target Time</div>
+    <div class="target-box" id="target-info">Select Level to Start</div>
 
     <div class="controls">
         <select id="diff-select" onchange="updateTargetInfo()">
             <option value="easy">Easy Mode</option>
-            <option value="medium">Medium Mode</option>
+            <option value="medium" selected>Medium Mode</option>
             <option value="hard">Hard Mode</option>
         </select>
-        <button class="btn-start" onclick="playEffect('start'); startNewGame()">New Game</button>
-        <button id="restart-btn" class="btn-restart" onclick="playEffect('click'); restartCurrentLevel()" style="display: none;">Restart</button>
-        <button id="pause-btn" class="btn-pause" onclick="playEffect('click'); togglePause()" style="display: none;">⏸ Pause</button>
+        <button class="btn-start" onclick="startNewGame()">New Game</button>
     </div>
 
     <div class="grid-container">
-        <div id="pause-msg">GAME PAUSED</div>
         <div id="grid" class="grid"></div>
+        <!-- List of numbers -->
+        <div id="number-picker">
+            <button class="num-btn" onclick="inputNum(1)">1</button>
+            <button class="num-btn" onclick="inputNum(2)">2</button>
+            <button class="num-btn" onclick="inputNum(3)">3</button>
+            <button class="num-btn" onclick="inputNum(4)">4</button>
+            <button class="num-btn" onclick="inputNum(5)">5</button>
+            <button class="num-btn" onclick="inputNum(6)">6</button>
+            <button class="num-btn" onclick="inputNum(7)">7</button>
+            <button class="num-btn" onclick="inputNum(8)">8</button>
+            <button class="num-btn" onclick="inputNum(9)">9</button>
+            <button class="num-btn clear" onclick="inputNum('')">CLEAR BOX</button>
+        </div>
     </div>
 
     <div class="controls">
-        <button class="btn-action" onclick="playEffect('click'); undo()">↩ Undo</button>
-        <button class="btn-action" onclick="playEffect('click'); redo()">↪ Redo</button>
-        <button class="btn-hint" onclick="playEffect('hint'); giveHint()">Hint (<span id="h-count">3</span>)</button>
-        <button class="btn-giveup" onclick="playEffect('click'); revealAnswer()">Give Up</button>
+        <button class="btn-action" onclick="undo()">↩ Undo</button>
+        <button class="btn-action" onclick="redo()">↪ Redo</button>
+        <button class="btn-hint" onclick="giveHint()">Hint (<span id="h-count">3</span>)</button>
+        <button class="btn-giveup" onclick="revealAnswer()">Give Up</button>
     </div>
 
     <script>
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        // SOUND SYSTEM
+        let audioCtx;
+        function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+
         function playEffect(type) {
+            initAudio();
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.connect(gain); gain.connect(audioCtx.destination);
-            if (type === 'type') { osc.frequency.setValueAtTime(600, audioCtx.currentTime); gain.gain.setValueAtTime(0.05, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1); osc.start(); osc.stop(audioCtx.currentTime + 0.1); }
-            else if (type === 'click') { osc.frequency.setValueAtTime(400, audioCtx.currentTime); gain.gain.setValueAtTime(0.1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1); osc.start(); osc.stop(audioCtx.currentTime + 0.1); }
-            else if (type === 'hint') { osc.type = 'triangle'; osc.frequency.setValueAtTime(800, audioCtx.currentTime); gain.gain.setValueAtTime(0.1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3); osc.start(); osc.stop(audioCtx.currentTime + 0.3); }
-            else if (type === 'start') { osc.frequency.setValueAtTime(440, audioCtx.currentTime); gain.gain.setValueAtTime(0.1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2); osc.start(); osc.stop(audioCtx.currentTime + 0.2); }
-            else if (type === 'win') { [523, 659, 783, 1046].forEach((f, i) => { const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.frequency.setValueAtTime(f, audioCtx.currentTime + i*0.1); g.gain.setValueAtTime(0.1, audioCtx.currentTime); o.start(audioCtx.currentTime + i*0.1); o.stop(audioCtx.currentTime + i*0.1 + 0.3); }); }
+            
+            if (type === 'click') { 
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime); 
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.1); 
+            }
+            else if (type === 'hint') { 
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(800, audioCtx.currentTime); 
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3); 
+            }
+            else if (type === 'start') { 
+                osc.frequency.setValueAtTime(440, audioCtx.currentTime); 
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.2); 
+            }
+            else if (type === 'win') {
+                [523, 659, 783, 1046].forEach((f, i) => {
+                    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+                    o.connect(g); g.connect(audioCtx.destination);
+                    o.frequency.setValueAtTime(f, audioCtx.currentTime + i*0.1);
+                    g.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    o.start(audioCtx.currentTime + i*0.1); o.stop(audioCtx.currentTime + i*0.1 + 0.3);
+                });
+            }
         }
 
-        let sol = [], initialPuzzle = [], hints = 3, moves = 0, history = [], redoStack = [], currentDiff = 'easy';
-        let timer, seconds = 0, isPaused = false;
-
-        const normalTimes = { easy: "05:00", medium: "12:00", hard: "25:00" };
-        const normalSecs = { easy: 300, medium: 720, hard: 1500 };
+        // GAME LOGIC
+        let solution = [], puzzle = [], moves = 0, hints = 3, selectedCell = null;
+        let timer, seconds = 0, history = [], redoStack = [];
 
         function updateTargetInfo() {
-            let diff = document.getElementById('diff-select').value;
-            document.getElementById('target-info').innerText = `Normal Brain Solve Time: ${normalTimes[diff]}`;
+            const times = { easy: "05:00", medium: "12:00", hard: "25:00" };
+            document.getElementById('target-info').innerText = `Normal Brain Solve Time: ${times[document.getElementById('diff-select').value]}`;
         }
 
         function startNewGame() {
-            document.getElementById('restart-btn').style.display = "inline-block";
-            document.getElementById('pause-btn').style.display = "inline-block";
-            document.getElementById('pause-msg').style.display = "none";
-            document.getElementById('grid').classList.remove('paused-grid');
-
-            isPaused = false; moves = 0; hints = 3; history = []; redoStack = []; seconds = 0;
-            currentDiff = document.getElementById('diff-select').value;
-            document.getElementById('level-display').innerText = currentDiff.toUpperCase();
+            playEffect('start');
+            clearInterval(timer); seconds = 0; moves = 0; hints = 3; history = []; redoStack = [];
+            let diff = document.getElementById('diff-select').value;
             document.getElementById('move-count').innerText = "0";
             document.getElementById('h-count').innerText = "3";
-            updateTargetInfo();
-
-            let b = Array.from({length:9}, () => Array(9).fill(0));
-            fillSudoku(b); sol = b.map(r => [...r]);
+            document.getElementById('level-label').innerText = diff.toUpperCase();
             
-            let puzzle = b.map(r => [...r]);
-            let removed = currentDiff === 'easy' ? 35 : currentDiff === 'medium' ? 48 : 58;
+            generateSudoku(diff);
+            renderGrid();
+            startTimer();
+        }
+
+        function generateSudoku(diff) {
+            let board = Array.from({length:9}, () => Array(9).fill(0));
+            fillSudoku(board);
+            solution = board.map(r => [...r]);
+            let removed = diff === 'easy' ? 32 : diff === 'medium' ? 46 : 56;
+            puzzle = board.map(r => [...r]);
             while(removed > 0) {
                 let r = Math.floor(Math.random()*9), c = Math.floor(Math.random()*9);
                 if(puzzle[r][c] !== 0) { puzzle[r][c] = 0; removed--; }
             }
-            initialPuzzle = puzzle.map(r => [...r]);
-            render(puzzle); startTimer();
-        }
-
-        function restartCurrentLevel() {
-            if (!initialPuzzle.length) return;
-            moves = 0; history = []; redoStack = []; seconds = 0;
-            document.getElementById('move-count').innerText = "0";
-            render(initialPuzzle);
-            if (isPaused) togglePause();
-        }
-
-        function togglePause() {
-            isPaused = !isPaused;
-            document.getElementById('grid').classList.toggle('paused-grid');
-            document.getElementById('pause-msg').style.display = isPaused ? "block" : "none";
-            document.getElementById('pause-btn').innerText = isPaused ? "▶ Resume" : "⏸ Pause";
-            if(isPaused) clearInterval(timer); else startTimer();
         }
 
         function fillSudoku(b) {
-            for(let r=0; r<9; r++) {
-                for(let c=0; c<9; c++) {
-                    if(b[r][c] === 0) {
-                        let ns = [...Array(10).keys()].slice(1).sort(()=>Math.random()-0.5);
-                        for(let n of ns) { if(isValid(b,r,c,n)) { b[r][c]=n; if(fillSudoku(b)) return true; b[r][c]=0; } }
-                        return false;
+            for(let i=0; i<81; i++) {
+                let r = Math.floor(i/9), c = i%9;
+                if(b[r][c] === 0) {
+                    let nums = [1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
+                    for(let n of nums) {
+                        if(isValid(b, r, c, n)) {
+                            b[r][c] = n;
+                            if(fillSudoku(b)) return true;
+                            b[r][c] = 0;
+                        }
                     }
+                    return false;
                 }
-            } return true;
+            }
+            return true;
         }
 
-        function isValid(b,r,c,n) {
-            for(let i=0; i<9; i++) {
-                let rS = 3 * Math.floor(r/3), cS = 3 * Math.floor(c/3);
-                if(b[r][i]===n || b[i][c]===n || b[rS + Math.floor(i/3)][cS + i%3]===n) return false;
-            } return true;
+        function isValid(b, r, c, n) {
+            for(let i=0; i<9; i++) if(b[r][i] === n || b[i][c] === n) return false;
+            let sr = Math.floor(r/3)*3, sc = Math.floor(c/3)*3;
+            for(let i=0; i<3; i++) for(let j=0; j<3; j++) if(b[sr+i][sc+j] === n) return false;
+            return true;
         }
 
-        function render(p) {
+        function renderGrid() {
             const grid = document.getElementById('grid');
             grid.innerHTML = '';
-            p.forEach((row, r) => {
-                row.forEach((val, c) => {
-                    const div = document.createElement('div');
-                    div.className = 'cell';
-                    if (r === 2 || r === 5) div.classList.add('row-thick-border');
-                    const input = document.createElement('input');
-                    input.type = "text"; input.maxLength = 1;
-                    input.id = `cell-${r}-${c}`;
-                    if(val !== 0) { input.value = val; input.disabled = true; div.classList.add('fixed'); }
-                    else { input.oninput = (e) => { if(!/[1-9]/.test(e.target.value)) e.target.value = ''; playEffect('type'); handleTyping(e, r, c); }; }
-                    div.appendChild(input); grid.appendChild(div);
-                });
-            });
-        }
-
-        function handleTyping(e, r, c, isAction = false) {
-            if(!isAction) { history.push({r, c, val: e.target.getAttribute('old') || ''}); redoStack = []; moves++; }
-            document.getElementById('move-count').innerText = moves;
-            const val = e.target.value;
-            if(currentDiff === 'easy' && val !== "") e.target.className = (val == sol[r][c]) ? "user-correct" : "user-wrong";
-            else e.target.className = "";
-            e.target.setAttribute('old', val);
-            checkWin();
-        }
-
-        function giveHint() {
-            if(hints <= 0) return;
-            let empty = Array.from(document.querySelectorAll('input:not(:disabled)')).filter(i => i.value == "");
-            if(empty.length) {
-                let target = empty[Math.floor(Math.random()*empty.length)];
-                let parts = target.id.split('-');
-                let r = parseInt(parts[1]), c = parseInt(parts[2]);
-                target.value = sol[r][c];
-                target.className = "hint-filled";
-                hints--; moves++;
-                document.getElementById('h-count').innerText = hints;
-                document.getElementById('move-count').innerText = moves;
-                checkWin();
+            for(let r=0; r<9; r++) {
+                for(let c=0; c<9; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell' + (puzzle[r][c] !== 0 ? ' fixed' : '');
+                    cell.innerText = puzzle[r][c] !== 0 ? puzzle[r][c] : '';
+                    cell.dataset.r = r; cell.dataset.c = c;
+                    cell.onclick = () => { playEffect('click'); selectCell(cell); };
+                    grid.appendChild(cell);
+                }
             }
         }
 
-        function revealAnswer() {
-            if(!sol.length) return;
-            clearInterval(timer);
-            document.querySelectorAll('input:not(:disabled)').forEach(input => {
-                let p = input.id.split('-');
-                input.value = sol[parseInt(p[1])][parseInt(p[2])];
-                input.style.color = "#e74c3c";
-                input.disabled = true;
-            });
-            alert("Game Over! Answer Revealed.");
+        function selectCell(cell) {
+            if(cell.classList.contains('fixed')) return;
+            if(selectedCell) selectedCell.classList.remove('selected');
+            selectedCell = cell;
+            selectedCell.classList.add('selected');
+            document.getElementById('number-picker').style.display = 'grid';
         }
 
-        function undo() {
-            if(!history.length) return;
-            const last = history.pop(); const input = document.getElementById(`cell-${last.r}-${last.c}`);
-            redoStack.push({r: last.r, c: last.c, val: input.value});
-            input.value = last.val; moves++; handleTyping({target: input}, last.r, last.c, true);
-        }
-
-        function redo() {
-            if(!redoStack.length) return;
-            const next = redoStack.pop(); const input = document.getElementById(`cell-${next.r}-${next.c}`);
-            history.push({r: next.r, c: next.c, val: input.value});
-            input.value = next.val; moves++; handleTyping({target: input}, next.r, next.c, true);
+        function inputNum(n) {
+            if(!selectedCell) return;
+            playEffect('click');
+            let r = selectedCell.dataset.r, c = selectedCell.dataset.c;
+            history.push({r, c, oldVal: selectedCell.innerText});
+            
+            selectedCell.innerText = n;
+            selectedCell.classList.remove('user-correct', 'user-wrong');
+            if(n !== '') {
+                if(parseInt(n) === solution[r][c]) selectedCell.classList.add('user-correct');
+                else selectedCell.classList.add('user-wrong');
+            }
+            
+            moves++;
+            document.getElementById('move-count').innerText = moves;
+            document.getElementById('number-picker').style.display = 'none';
+            selectedCell.classList.remove('selected');
+            selectedCell = null;
+            checkWin();
         }
 
         function startTimer() {
-            if(timer) clearInterval(timer);
             timer = setInterval(() => {
                 seconds++;
-                let m = Math.floor(seconds/60).toString().padStart(2,'0'), s = (seconds%60).toString().padStart(2,'0');
+                let m = Math.floor(seconds/60).toString().padStart(2, '0');
+                let s = (seconds%60).toString().padStart(2, '0');
                 document.getElementById('timer-display').innerText = `⏱ ${m}:${s}`;
             }, 1000);
         }
 
-        function checkWin() {
-            let inputs = Array.from(document.querySelectorAll('input:not(:disabled)'));
-            if(inputs.length && inputs.every(i => {
-                let p = i.id.split('-');
-                return i.value != "" && parseInt(i.value) === sol[parseInt(p[1])][parseInt(p[2])];
-            })) { 
-                clearInterval(timer); 
-                playEffect('win');
-                let comment = (seconds <= normalSecs[currentDiff]) ? "SHABASH! You are a GENIUS! 🧠" : "WELL DONE! You solved it! ✨";
-                alert(comment + "\nTime: " + document.getElementById('timer-display').innerText); 
+        function giveHint() {
+            if(hints <= 0) return;
+            playEffect('hint');
+            let emptyCells = [];
+            document.querySelectorAll('.cell').forEach(c => {
+                if((c.innerText === '' || c.classList.contains('user-wrong')) && !c.classList.contains('fixed')) emptyCells.push(c);
+            });
+            if(emptyCells.length > 0) {
+                let c = emptyCells[Math.floor(Math.random()*emptyCells.length)];
+                c.innerText = solution[c.dataset.r][c.dataset.c];
+                c.classList.add('user-correct');
+                hints--;
+                document.getElementById('h-count').innerText = hints;
             }
         }
 
+        function revealAnswer() {
+            playEffect('click');
+            document.querySelectorAll('.cell').forEach(c => {
+                c.innerText = solution[c.dataset.r][c.dataset.c];
+                if(!c.classList.contains('fixed')) c.classList.add('user-correct');
+            });
+            clearInterval(timer);
+        }
+
+        function undo() {
+            playEffect('click');
+            if(history.length > 0) {
+                let last = history.pop();
+                let cell = document.querySelector(`[data-r="${last.r}"][data-c="${last.c}"]`);
+                cell.innerText = last.oldVal;
+                cell.classList.remove('user-correct', 'user-wrong');
+            }
+        }
+
+        function checkWin() {
+            let win = true;
+            document.querySelectorAll('.cell').forEach(c => {
+                if(c.innerText == '' || parseInt(c.innerText) !== solution[c.dataset.r][c.dataset.c]) win = false;
+            });
+            if(win) { playEffect('win'); alert("Great Job! You solved it!"); clearInterval(timer); }
+        }
+
         updateTargetInfo();
-        render(Array.from({length:9},()=>Array(9).fill(0)));
     </script>
 </body>
 </html>
