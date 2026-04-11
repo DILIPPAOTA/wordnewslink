@@ -209,7 +209,7 @@ fetch("https://api.rss2json.com/v1/api.json?rss_url=https://news.google.com/rss?
 
     data.items.forEach((n)=>{
 
-        if(n.title.toLowerCase().includes("pakistan")) return;
+        if(n.title.toLowerCase().includes("#p")) return;
 
         let html = `
         <a href="${n.link}" target="_blank">
